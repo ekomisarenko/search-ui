@@ -14,29 +14,30 @@
       })
     </script>
     <style>
-.coveo-result-list-container.coveo-list-layout-container {
+#result-container {
     width: 50%!important;
     float: left;
 }
-.coveo-list-layout.CoveoResult.coveo-omnibox-selectable {
+#result-container .coveo-list-layout.CoveoResult.coveo-omnibox-selectable {
     width: 33%;
     float: left;
     height: 100px;
     padding: 10px;
     border: 1px solid lightslategray;
 }
-.coveo-list-layout.CoveoResult.coveo-omnibox-selectable:nth-child(n+10) {
+#result-container .CoveoResult.coveo-omnibox-selectable:nth-child(n+10) {
     display: none;
 }
-.CoveoThumbnail {
+#result-container .CoveoThumbnail {
     text-align: center;
+    overflow: hidden;
 }
-.CoveoThumbnail img {
+#result-container .CoveoThumbnail img {
     width: 100px;
+    overflow: hidden;
 }
-.CoveoResultLink {
+#result-container .CoveoResultLink {
     white-space: nowrap;
-    width: 100px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -48,14 +49,13 @@
     </div>
     <div class='coveo-search-section'>
       <div class="CoveoSettings"></div>
-      <div class="CoveoSearchbox" data-enable-omnibox="true"
-        data-enable-query-extension-addon="false" data-enable-query-suggest-addon="false"></div>
-      <div class="CoveoOmniboxResultList">
+      <div class="CoveoSearchbox" data-enable-omnibox="true"></div>
+      <!--The content of the container gets cleared before the rendering of the results-->
+      <div id="result-container"></div>
+      <div class="CoveoOmniboxResultList" data-result-container-selector="#result-container">
         <script class="result-template" type="text/x-underscore">
-          <div>
-            <div class="CoveoThumbnail"></div>
-            <div class="CoveoResultLink"></div>
-          </div>
+          <div class="CoveoThumbnail"></div>
+          <div class="CoveoResultLink"></div>
         </script>
       </div>
     </div>
