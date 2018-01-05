@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, height=device-height" >
+    <title>Title</title>
+    <link rel="stylesheet" href="./css/CoveoFullSearch.css"/>
+    <script src="js/CoveoJsSearch.Lazy.js"></script>
+    <script src="js/templates/templates.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        Coveo.SearchEndpoint.configureSampleEndpointV2();
+        Coveo.init(document.body);
+      })
+    </script>
+    <style>
+.coveo-result-list-container.coveo-list-layout-container {
+    width: 50%!important;
+    float: left;
+}
+.coveo-list-layout.CoveoResult.coveo-omnibox-selectable {
+    width: 33%;
+    float: left;
+    height: 100px;
+    padding: 10px;
+    border: 1px solid lightslategray;
+}
+.coveo-list-layout.CoveoResult.coveo-omnibox-selectable:nth-child(n+10) {
+    display: none;
+}
+.CoveoThumbnail {
+    text-align: center;
+}
+.CoveoThumbnail img {
+    width: 100px;
+}
+.CoveoResultLink {
+    white-space: nowrap;
+    width: 100px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+    </style>
+  </head>
+  <body id="search" class='CoveoSearchInterface' data-enable-history="true">
+    <div class="coveo-tab-section">
+      <a class="CoveoTab" data-id="All" data-caption="All Content"></a>
+    </div>
+    <div class='coveo-search-section'>
+      <div class="CoveoSettings"></div>
+      <div class="CoveoSearchbox" data-enable-omnibox="true"
+        data-enable-query-extension-addon="false" data-enable-query-suggest-addon="false"></div>
+      <div class="CoveoOmniboxResultList">
+        <script class="result-template" type="text/x-underscore">
+          <div>
+            <div class="CoveoThumbnail"></div>
+            <div class="CoveoResultLink"></div>
+          </div>
+        </script>
+      </div>
+    </div>
+  </body>
+</html>
