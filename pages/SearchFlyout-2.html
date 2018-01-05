@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" >
+    <meta name="viewport" content="width=device-width, height=device-height" >
+    <title>Title</title>
+    <link rel="stylesheet" href="./css/CoveoFullSearch.css"/>
+    <script src="js/CoveoJsSearch.Lazy.js"></script>
+    <script src="js/templates/templates.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        Coveo.SearchEndpoint.configureSampleEndpointV2();
+        Coveo.init(document.body);
+
+        $("#search").on("populateOmnibox", onPopulateOmnibox);
+    });
+
+function onPopulateOmnibox (e , populateOmniboxObject){
+  // var deferred = $.Deferred();
+  // populateOmniboxObject.rows.push({deferred : deferred});
+  //
+  // $.ajax({
+  //     url : "https://platform.cloud.coveo.com/rest/search/v2/?organizationId=searchuisamples&viewAllContent=1",
+  //     success : function(results){
+  //         var elementToReturn = buildOmniboxContent(results);
+  //         var objectToReturn = {
+  //             zIndex: 100,
+  //             element : elementToReturn
+  //         }
+  //         deferred.resolve(objectToReturn);
+  //     },
+  //     error : function(){
+  //         deferred.resolve({ element : undefined})
+  //     }
+  // });
+
+  var wordToSearch = populateOmniboxObject.completeQueryExpression.word;
+  var regexToSearch = populateOmniboxObject.completeQueryExpression.regex;
+  var elementToReturn = buildOmniboxContent(regexToSearch, populateOmniboxObject);
+  var objectToReturn = { zIndex: 100, element : elementToReturn }
+  populateOmniboxObject.rows.push(objectToReturn);
+};
+
+function buildOmniboxContent(regex, populateOmniboxObject) {
+  var container = $("<div class='flyout-container'></div>");
+
+  var searchResultsContainer = $("<div id='top-search-results'></div>");
+  var searchResults = getSearchResults(regex);
+
+  for(var i = 0 ; i < searchResults.length ; i++) {
+      var searchResult = buildSearchResultHtml(searchResults[i])
+      $(searchResult).addClass("coveo-omnibox-selectable")
+
+      $(searchResult).on("click keyboardSelect" , function(){
+          console.log("record was selected...");
+          populateOmniboxObject.clear();
+          populateOmniboxObject.close();
+      })
+      searchResultsContainer.append(searchResult);
+  }
+  container.append(searchResultsContainer);
+
+  var suggestionsContainer = $("<div id='top-suggestions'></div>");
+  var suggestions = getSuggestions(regex);
+
+  for(var i = 0 ; i < suggestions.length ; i++) {
+      var suggestion = buildSuggestionHtml(suggestions[i])
+      $(suggestion).addClass("coveo-omnibox-selectable")
+
+      $(suggestion).on("click keyboardSelect" , function(){
+          console.log("record was selected...");
+          populateOmniboxObject.clear();
+          populateOmniboxObject.close();
+      })
+      suggestionsContainer.append(suggestion);
+  }
+  container.append(suggestionsContainer);
+
+  return container[0];
+};
+
+function getSearchResults(regex) {
+  return [
+    {"title": "Product name", "subtitle": "Product description", "thumbnail": ""},
+    {"title": "Product name", "subtitle": "Product description", "thumbnail": ""},
+    {"title": "Product name", "subtitle": "Product description", "thumbnail": ""},
+    {"title": "Product name", "subtitle": "Product description", "thumbnail": ""},
+    {"title": "Product name", "subtitle": "Product description", "thumbnail": ""},
+    {"title": "Product name", "subtitle": "Product description", "thumbnail": ""}
+  ];
+};
+
+function getSuggestions(regex) {
+  // fetch search suggestions from Search API
+  return [
+    {"title": "Samsung"},
+    {"title": "Samsung Galaxy"},
+    {"title": "Samsung Galaxy Note8"},
+    {"title": "Samsung Galaxy S8"},
+    {"title": "Samsung Galaxy S8+"},
+    {"title": "Samsung Galaxy S7 Edge"}
+  ];
+};
+
+function buildSearchResultHtml(record) {
+  // fetch search results from Search API
+  return $("<div class='coveo-omnibox-selectable'>" +
+    "<div class='search-result-thumbnail'></div>" +
+    "<span class='search-result-title'>Product name</span>" +
+    "<span class='search-result-sub-title'>Product description</span>" +
+    "</div>");
+};
+
+function buildSuggestionHtml(record) {
+  return $("<div>" + record.title + "</div>");
+};
+    </script>
+    <style>
+.CoveoSearchInterface .coveo-search-section {
+  max-width: 1024px;
+  margin: 54px auto 47px auto;
+  padding: 0 10px;
+}
+.flyout-container {
+  padding: 10px;
+}
+#top-search-results {
+  width: 50%;
+  float: left;
+}
+#top-search-results .coveo-omnibox-selectable {
+  width: 33%;
+  height: 200px;
+  display: inline-block;
+  text-align: center;
+  padding: 10px;
+  box-sizing: border-box;
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgba(204, 204, 204, 1);
+  border-radius: 0px;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+#top-search-results .search-result-thumbnail {
+  height: 100px;
+  background: inherit;
+  background-color: rgba(242, 242, 242, 1);
+  border: none;
+  border-radius: 0px;
+  -moz-box-shadow: none;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+  color: #AAAAAA;
+}
+#top-search-results .search-result-title {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: bold;
+  padding-top: 20px;
+}
+#top-search-results .search-result-sub-title {
+  display: inline-block;
+  font-size: 12px;
+  padding-top: 5px;
+  padding-bottom: 40px;
+}
+
+.magic-box-suggestion.coveo-omnibox-selectable {
+  width: 50%;
+  float: left;
+  font-size: 16px!important;
+  padding-top: 5px!important;
+  padding-bottom: 5px!important;
+  padding-left: 20px!important;
+}
+
+#top-suggestions {
+  width: 50%;
+  float: left;
+  padding-left: 20px;
+}
+#top-suggestions .coveo-omnibox-selectable {
+  font-size: 16px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+    </style>
+  </head>
+  <body id="search" class='CoveoSearchInterface' data-enable-history="true">
+    <div class="CoveoAnalytics"></div>
+    <div class="coveo-tab-section">
+      <a class="CoveoTab" data-id="All" data-caption="All Content"></a>
+    </div>
+    <div class='coveo-search-section'>
+      <div class="CoveoSettings"></div>
+      <div class="CoveoSearchbox" data-enable-omnibox="true" data-enable-query-suggest-addon="false"></div>
+      <!-- <div class="CoveoOmniboxResultList" data-result-container-selector="#top-search-results"></div> -->
+    </div>
+  </body>
+</html>
